@@ -63,8 +63,8 @@ def main():
             print 'Temp1: %s Temp2: %s Outside: %s' % (temp_sensor1, temp_sensor2, outsideTemp)
             f = urllib2.urlopen(baseURL + "&field1=%s&field2=%s&field3=%s" % (temp_sensor1, temp_sensor2, outsideTemp))
             print f.read()
-            f.close()	
-	        time.sleep(update_rate_secs)
+            f.close()
+            time.sleep(update_rate_secs)
         except:
             print 'exiting.'
             break
