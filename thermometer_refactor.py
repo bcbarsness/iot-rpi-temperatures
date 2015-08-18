@@ -58,9 +58,18 @@ def main():
             print f.read()
             f.close()
             time.sleep(update_rate_secs)
+#        except:
+#            print 'exiting.'
+#            break
+
+        except IOError as (errno, strerror):
+            print "I/O error({0}): {1}".format(errno, strerror)
+        except ValueError:
+            print "Could not convert data to an integer."
         except:
-            print 'exiting.'
-            break
+            print "Unexpected error:", sys.exc_info()[0]
+            raise
+
     temp_file1.close()
     temp_file2.close()
 
