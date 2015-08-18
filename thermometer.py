@@ -48,32 +48,33 @@ def getOutsideTemp():
 
 	
 def main():
-    outputfile = open('output.txt', 'w')
     if len(sys.argv) < 2:
-        outputfile.write('Usage: python temperature.py PRIVATE_KEY')
+        print 'Usage: python temperature.py PRIVATE_KEY'
         exit(0)
     print 'starting...'
+    
 
     baseURL = 'https://api.thingspeak.com/update?api_key=%s' % sys.argv[1]
 
     while True:
         try:
+            outputfile = open('thermostat_reads.txt', 'a')
             temp_sensor1 = read_temp(device_temp1)
             temp_sensor2 = read_temp(device_temp2)            
             outsideTemp = getOutsideTemp()
             outputfile.write('Temp1: %s Temp2: %s Outside: %s' % (temp_sensor1, temp_sensor2, outsideTemp))
             f = urllib2.urlopen(baseURL + "&field1=%s&field2=%s&field3=%s" % (temp_sensor1, temp_sensor2, outsideTemp))
-            outputfile.write(f.read())
+            outputfile.write('   ' + f.read()+ '\n')
             f.close()
+            outputfile.close()
             time.sleep(update_rate_secs)
         except IOError as (errno, strerror):
             outputfile.write("I/O error({0}): {1}".format(errno, strerror))
         except ValueError:
             outputfile.write("Could not convert data to an integer.")
         except:
-            outputfile.write("Unexpected error:", sys.exc_info()[0])
+            print "Unexpected error:", sys.exc_info()[0]
             raise
-    outputfile.close()
 if __name__ == '__main__':
     main()
 
