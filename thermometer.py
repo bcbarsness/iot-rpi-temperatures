@@ -15,7 +15,7 @@ base_dir = '/sys/bus/w1/devices/'
 #device_file = device_folder + '/w1_slave'
 device_temp1 = glob.glob(base_dir + '28-000006dd6544/w1_slave') [0]
 device_temp2 = glob.glob(base_dir + '28-000006dc7b83/w1_slave') [0]
-url="http://api.openweathermap.org/data/2.5/weather?zip=23507,us"
+url="http://api.openweathermap.org/data/2.5/weather?zip=23507,us&APPID=%s" % sys.argv[2]
  
 def read_temp_raw(device_id):
     temp_file = open(device_id, 'r')
@@ -48,8 +48,8 @@ def getOutsideTemp():
 
 	
 def main():
-    if len(sys.argv) < 2:
-        print 'Usage: python temperature.py PRIVATE_KEY'
+    if len(sys.argv) < 3:
+        print 'Usage: python temperature.py PRIVATE_KEY OpenWeatherMap_API_KEY'
         exit(0)
     print 'starting...'
     
@@ -68,13 +68,10 @@ def main():
             f.close()
             outputfile.close()
             time.sleep(update_rate_secs)
-        except IOError as (errno, strerror):
-            outputfile.write("I/O error({0}): {1}".format(errno, strerror))
-        except ValueError:
-            outputfile.write("Could not convert data to an integer.")
-        except:
-            print "Unexpected error:", sys.exc_info()[0]
-            raise
+        except Exception as e:
+            print e.__doc__
+            print e.message
+
 if __name__ == '__main__':
     main()
 
